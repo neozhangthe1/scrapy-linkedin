@@ -3,45 +3,55 @@ from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.http import Request
 from scrapy import log
-from linkedin.items import LinkedinItem, PersonProfileItem
+from videolectures.items import LinkedinItem, PersonProfileItem
 from os import path
-from linkedin.parser.HtmlParser import HtmlParser
+from videolectures.parser.HtmlParser import HtmlParser
 import os
 import urllib
 import string
 from bs4 import UnicodeDammit
-from linkedin.db import MongoDBClient
+from videolectures.db import MongoDBClient
+import pymongo
 
-class VideolecturesspiderSpider(CrawlSpider):
+class VideolecturesSpider(CrawlSpider):
     name = 'VideolecturesSpider'
     allowed_domains = ['videolectures.net']
-    start_urls = [ "http://videolectures.net/site/list/authors/?page=%s" % s for s in range(1,22)]
+    #start_urls = [ "http://videolectures.net/site/list/authors/?page=%s" % s for s in [20,21]]
 
     rules = (
         #Rule(SgmlLinkExtractor(allow=r'Items/'), callback='parse_item', follow=True),
     )
 
     def __init__(self):
-        pass
+        self.url_collection = pymongo.Connection("10.1.1.111",12345)["videolectures"]["urls"]
+        self.start_urls = []
+        for data in self.url_collection.find({}):
+            for u in data["urls"]:
+                if u["flag"] == 0:
+                    self.start_urls.append(u["u"])
+        print len(self.start_urls), "to crawl"
         
     def parse(self, response):
         """
         default parse method, rule is not useful now
         """
-        response = response.replace(url=HtmlParser.remove_url_parameter(response.url))
+        #response = response.replace(url=HtmlParser.remove_url_parameter(response.url))
         hxs = HtmlXPathSelector(response)
         index_level = self.determine_level(response)
         if index_level == 1:
             #self.save_to_file_system(index_level, response)
+            page = int(response.url[response.url.find("?page=")+6:])
             relative_urls = self.get_follow_links(index_level, hxs)
+            item = {"_id":page, "urls":[{"u":u, "flag":0} for u in relative_urls]}
+            self.url_collection.insert(item)
             if relative_urls is not None:
                 for url in relative_urls:
                     yield Request(url, callback=self.parse)
         elif index_level == 2:
             personProfile = HtmlParser.extract_videolectures_profile(hxs)
             videolectures_id = self.get_videolectures_id(response.url)
-            #videolectures_id = UnicodeDammit(urllib.unquote_plus(linkedin_id)).markup
-            if linkedin_id:
+            #videolectures_id = UnicodeDammit(urllib.unquote_pblus(linkedin_id)).markup
+            if videolectures_id:
                 personProfile['_id'] = videolectures_id
                 personProfile['url'] = UnicodeDammit(response.url).markup
                 yield personProfile
@@ -104,14 +114,14 @@ class VideolecturesspiderSpider(CrawlSpider):
     def get_videolectures_id(self, url):
         find_index = url.find("videolectures.net/")
         if find_index >= 0:
-            return url[find_index:].replace('/', '')
+            return url[find_index+18:].replace('/', '')
         return None
         
     def get_follow_links(self, level, hxs):
         if level == 1:
-            relative_urls = hxs.select("//tr[@class='al_tint']/td/td/b/a/@href").extract()
+            relative_urls = hxs.select("//tr/td[@align='right']/b/a/@href").extract()
             relative_urls = ["http://videolectures.net" + x for x in relative_urls]
-        
+            print len(relative_urls), "person to crawl"
         #if level in [1, 2, 3]:
         #    relative_urls = hxs.select("//ul[@class='directory']/li/a/@href").extract()
             

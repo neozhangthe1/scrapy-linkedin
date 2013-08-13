@@ -1,4 +1,4 @@
-from linkedin import settings
+from videolectures import settings
 import pymongo
 
 class MongoDBClient(object):

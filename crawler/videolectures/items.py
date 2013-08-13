@@ -34,4 +34,5 @@ class VideolecturesItem(Item):
     _id = Field()
     url = Field()
     name = Field()
+    homepage = Field()
     lectures = Field()

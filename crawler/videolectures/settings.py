@@ -14,7 +14,7 @@ NEWSPIDER_MODULE = BOT_NAME+'.spiders'
 
 DOWNLOADER_MIDDLEWARES = {
     BOT_NAME+'.middleware.CustomHttpProxyMiddleware': 543,
-    BOT_NAME+'videolectures.middleware.CustomUserAgentMiddleware': 545,
+    BOT_NAME+'.middleware.CustomUserAgentMiddleware': 545,
 }
 
 ########### Item pipeline

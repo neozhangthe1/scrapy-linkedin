@@ -2,7 +2,6 @@ from videolectures.items import VideolecturesItem
 from bs4 import UnicodeDammit
 from w3lib.url import url_query_cleaner
 import random
-import LinkedinParser
 
 
 class HtmlParser:    
@@ -10,13 +9,24 @@ class HtmlParser:
     def extract_videolectures_profile(hxs):
         profile = VideolecturesItem()
         ## videolecture
-        name = hxs.select("//span[@class='auth_name']/a/text()").extract()[0]
-        homepage = hxs.select("//span[@class='auth_name']/a/@href").extract()[0]
+        homepage = hxs.select("//div/table/tbody/tr/td/a/@href").extract()
+        if len(homepage) > 0:
+            homepage = homepage[0]
+        name = hxs.select("//span[@class='auth_name ']/a/text()").extract()
+        if len(name) == 0:
+            name = hxs.select("//span[@class='auth_name ']/text()").extract()
+        if len(name) > 0:
+            name = name[0]
+        #if name is not None:
+            #print "name", name
+            #name = name[0]
+
+            #homepage = homepage[0]
         #lectures
         lectures = hxs.select("//td[@class='auth_table_desc']/a/@href").extract()
         profile["name"] = name
         profile["homepage"] = homepage
-        profile["lectures"] = lectures
+        profile["lectures"] = [l.replace("/","") for l in lectures]
         return profile
         
 

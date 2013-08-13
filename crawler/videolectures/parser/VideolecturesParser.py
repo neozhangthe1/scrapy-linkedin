@@ -19,5 +19,4 @@ def parse_homepage(html):
             return result
     return None
 
-def parse
 
