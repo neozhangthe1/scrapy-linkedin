@@ -16,7 +16,10 @@ def transfer():
             item["also_view"] = friends
         else:
             item["also_view"] = []
-        mongo_tar.save(item)
+        try:
+            mongo_tar.save(item)
+        except:
+            pass
 
 if __name__ == "__main__":
     transfer()
