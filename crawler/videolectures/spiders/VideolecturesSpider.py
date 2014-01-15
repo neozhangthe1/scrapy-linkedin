@@ -23,7 +23,8 @@ class VideolecturesSpider(CrawlSpider):
     )
 
     def __init__(self):
-        self.url_collection = pymongo.Connection("10.1.1.111",12345)["videolectures"]["urls"]
+        super(VideolecturesSpider, self).__init__()
+	self.url_collection = pymongo.Connection("10.1.1.111",12345)["videolectures"]["urls"]
         self.start_urls = []
         for data in self.url_collection.find({}):
             for u in data["urls"]:
