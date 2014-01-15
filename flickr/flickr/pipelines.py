@@ -41,8 +41,13 @@ class MongoDBPipeline(object):
             print "Append friend for", item["_id"]
             old_item = self.collection.find_one({"_id": item["_id"]})
             if old_item is not None:
-                for f in item["friend"]:
-                    old_item["friend"].append(f)
+                if "friend" in old_item:
+                    friends = set(old_item["friend"])
+                    for f in item["friend"]:
+                        friends.add(f)
+                    old_item["friend"] = list(friends)
+                else:
+                    old_item["friend"] = []
             else:
                 old_item = dict(item)
             self.collection.update(

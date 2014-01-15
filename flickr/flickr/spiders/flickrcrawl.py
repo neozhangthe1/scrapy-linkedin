@@ -1,19 +1,46 @@
 from scrapy.selector import HtmlXPathSelector
 from scrapy.contrib.spiders import CrawlSpider
 from scrapy.http import Request
-
+import pymongo
 from ..items import FlickrItem
 
 
 class FlickrSpider(CrawlSpider):
     name = "flickr"
     allowed_domains = []
-    g_ = open('id_lists.dat', 'r')
+    # g_ = open('id_lists.dat', 'r')
+    mongo = pymongo.Connection("10.1.1.111", 12345)["flickr"]["profiles"]
     start_urls = []
-    for e in g_:
-        start_urls.append('http://www.flickr.com/people/' + e.strip() + '/contacts/')
 
-    # rules = (Rule(SgmlLinkExtractor(allow=[r'/people/.*/contacts/\?filter=.*']),callback='parse'),)
+    method = 0
+    """
+    crawl seed profile
+    """
+    if method == 0:
+        res = mongo.find()
+        for item in res:
+            start_urls.append('http://www.flickr.com/people/' + item["_id"] + '/contacts/')
+
+    """
+    crawl all friends
+    """
+    if method == 1:
+        item_set = set()
+        res = mongo.find()
+        for item in res:
+            if "friend" in item:
+                for f in item["friend"]:
+                    item_set.add(f)
+        for item in item_set:
+            start_urls.append('http://www.flickr.com/people/' + item + '/contacts/')
+
+    # # f_in = open("/Users/yutao/Documents/Data/NetworkIntegration/MultiSNS/multiple_flickr.csv","r")
+# for e in f_in:
+#     x = e.split(",")[1]
+#     print x
+#     start_urls.append('http://www.flickr.com/people/' + x.strip('"') + '/contacts/')
+
+# rules = (Rule(SgmlLinkExtractor(allow=[r'/people/.*/contacts/\?filter=.*']),callback='parse'),)
 
     def parse(self, response):
         self.log('Hi, this is: %s' % response.url)
