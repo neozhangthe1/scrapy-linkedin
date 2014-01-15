@@ -30,7 +30,7 @@ class FlickrSpider(CrawlSpider):
         item['pname'] = item["_id"]
         item['friend'] = []
         for site in sites:
-            item['friend'].append(site.select('h2/text()').extract()[0])
+            item['friend'].append(site.select('h2/text()').extract())
             print site.select('h2/text()').extract()
         yield item
 

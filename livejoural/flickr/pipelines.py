@@ -38,20 +38,13 @@ class MongoDBPipeline(object):
         if self.__get_uniq_key() is None:
             self.collection.insert(dict(item))
         else:
-            print "Append friend for", item["_id"]
-            old_item = self.collection.find_one({"_id": item["_id"]})
-            if old_item is not None:
-                for f in item["friend"]:
-                    old_item["friend"].append(f)
-            else:
-                old_item = dict(item)
             self.collection.update(
-                {self.__get_uniq_key(): item[self.__get_uniq_key()]},
-                old_item,
-                upsert=True)
+                            {self.__get_uniq_key(): item[self.__get_uniq_key()]},
+                            dict(item),
+                            upsert=True)
         log.msg("Item wrote to MongoDB database %s/%s" %
-                (settings['MONGODB_DB'], settings['MONGODB_COLLECTION']),
-                level=log.DEBUG, spider=spider)
+                    (settings['MONGODB_DB'], settings['MONGODB_COLLECTION']),
+                    level=log.DEBUG, spider=spider)
         return item
 
     def __get_uniq_key(self):

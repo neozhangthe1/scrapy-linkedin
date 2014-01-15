@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/SocialSpider.iml" filepath="$PROJECT_DIR$/.idea/SocialSpider.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../scholarScape/.idea/scholarScape.iml" filepath="$PROJECT_DIR$/../scholarScape/.idea/scholarScape.iml" />
     </modules>
   </component>
 </project>

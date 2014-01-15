@@ -1,4 +1,4 @@
-# Scrapy settings for flickr project
+# Scrapy settings for livejournal project
 #
 # For simplicity, this file contains only the most important settings by
 # default. All the other settings are documented here:
@@ -7,25 +7,25 @@
 #
 import os
 
-BOT_NAME = 'flickr'
+BOT_NAME = 'livejournal'
 
-SPIDER_MODULES = ['flickr.spiders']
-NEWSPIDER_MODULE = 'flickr.spiders'
-DEFAULT_ITEM_CLASS = 'flickr.items.FlickrItem'
+SPIDER_MODULES = ['livejournal.spiders']
+NEWSPIDER_MODULE = 'livejournal.spiders'
+DEFAULT_ITEM_CLASS = 'livejournal.items.livejournalItem'
 # ITEM_PIPELINES = {
-# 'flickr.pipelines.PricePipeline': 300,
-# 'flickr.pipelines.JsonWriterPipeline': 800,
+# 'livejournal.pipelines.PricePipeline': 300,
+# 'livejournal.pipelines.JsonWriterPipeline': 800,
 # }
 ########### Item pipeline
 ITEM_PIPELINES = [
-    "flickr.pipelines.MongoDBPipeline",
+    "livejournal.pipelines.MongoDBPipeline",
 ]
 
-MONGODB_SERVER = '10.1.1.111'
-MONGODB_PORT = 12345
-# MONGODB_SERVER = 'localhost'
-# MONGODB_PORT = 27017
-MONGODB_DB = 'flickr'
+# MONGODB_SERVER = '10.1.1.111'
+# MONGODB_PORT = 12345
+MONGODB_SERVER = 'localhost'
+MONGODB_PORT = 27017
+MONGODB_DB = 'livejournal'
 MONGODB_COLLECTION = 'profiles'
 MONGODB_UNIQ_KEY = '_id'
 ###########
@@ -46,4 +46,4 @@ SCHEDULER_MIDDLEWARES = {
 }
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'flickr (+http://www.yourdomain.com)'
+#USER_AGENT = 'livejournal (+http://www.yourdomain.com)'
