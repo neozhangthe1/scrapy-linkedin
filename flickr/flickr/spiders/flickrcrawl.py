@@ -6,12 +6,12 @@ from ..items import FlickrItem
 
 
 class FlickrSpider(CrawlSpider):
-    name = "flickr"
+    name = "livejournal"
     allowed_domains = []
     g_ = open('id_lists.dat', 'r')
     start_urls = []
     for e in g_:
-        start_urls.append('http://www.flickr.com/people/' + e.strip() + '/contacts/')
+        start_urls.append('http://www.livejournal.com/people/' + e.strip() + '/contacts/')
 
     # rules = (Rule(SgmlLinkExtractor(allow=[r'/people/.*/contacts/\?filter=.*']),callback='parse'),)
 
@@ -37,11 +37,11 @@ class FlickrSpider(CrawlSpider):
         for p in range(1, page):
             if p == 1:
                 p += 1
-            url = 'http://www.flickr.com/people/' + pname + '/contacts/?filter&page=' + str(p)
+            url = 'http://www.livejournal.com/people/' + pname + '/contacts/?filter&page=' + str(p)
             yield Request(url, callback=self.parse)
 
     def get_username(self, url):
-        find_index = url.find("flickr.com/people/")
+        find_index = url.find("livejournal.com/people/")
         if find_index >= 0:
             x = url[find_index:].split("/")
             return x[2]
