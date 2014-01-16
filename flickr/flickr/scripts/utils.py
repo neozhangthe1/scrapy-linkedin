@@ -7,7 +7,7 @@ def transfer():
     con = MySQLdb.connect(host="10.1.1.110", user="root", passwd="keg2012", db="multions")
     cur = con.cursor()
     mongo = pymongo.Connection("10.1.1.111", 12345)["flickr"]["profiles"]
-    query = "select id from multiple_livejournal"
+    query = "select id from multiple_flickr"
     cur.execute(query)
     for row in cur.fetchall():
         print row[0]
