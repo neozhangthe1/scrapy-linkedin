@@ -54,6 +54,7 @@ class FlickrSpider(CrawlSpider):
         hxs = HtmlXPathSelector(response)
         sites = hxs.select('//tr/td[@class = "Who"]')
         pname = UnicodeDammit((hxs.select('//span[@class = "nickname"]/text()').extract())[0]).markup
+
         try:
             page = int(hxs.select('//div[@class = "Pages"]/@data-page-count').extract()[0])
         except:
