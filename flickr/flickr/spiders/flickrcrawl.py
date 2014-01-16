@@ -34,7 +34,7 @@ class FlickrSpider(CrawlSpider):
         for item in item_set:
             start_urls.append('http://www.flickr.com/people/' + item + '/contacts/')
 
-    if method == 3:
+    if method == 2:
         mongo = pymongo.Connection("10.1.1.111", 12345)["flickr"]["profiles_seed"]
         res = mongo.find()
         for item in res:
