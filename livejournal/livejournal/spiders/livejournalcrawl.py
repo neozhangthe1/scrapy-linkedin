@@ -17,7 +17,7 @@ class LiveJournalSpider(CrawlSpider):
     mongo = pymongo.Connection("10.1.1.111", 12345)["livejournal"]["profiles"]
     # start_urls = []
 
-    method = 0
+    method = 1
     """
     crawl seed profile
     """
@@ -59,7 +59,7 @@ class LiveJournalSpider(CrawlSpider):
             item['pname'] = self.get_username(response.url)
             item['friend'] = []
             item['friend'].append(hxs.select('//a[@class = " b-profile-username  "]/text()').extract())
-            print item['pname'],item['friend']
+            print item['name'], item['friend']
             yield item
         else:
             url = more_url

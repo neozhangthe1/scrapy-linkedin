@@ -33,6 +33,7 @@ class MongoDBPipeline(object):
             self.collection.create_index(self.__get_uniq_key(), unique=True)
 
     def process_item(self, item, spider):
+        print item
         if self.__get_uniq_key() is None:
             self.collection.insert(dict(item))
         else:

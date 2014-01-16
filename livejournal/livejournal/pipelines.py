@@ -10,10 +10,10 @@ class LivejournalPipeline(object):
     def process_item(self, item, spider):
         return item
 
+
 class MongoDBPipeline(object):
     def __init__(self):
         import pymongo
-
         connection = pymongo.Connection(settings['MONGODB_SERVER'], settings['MONGODB_PORT'])
         self.db = connection[settings['MONGODB_DB']]
         self.collection = self.db[settings['MONGODB_COLLECTION']]
