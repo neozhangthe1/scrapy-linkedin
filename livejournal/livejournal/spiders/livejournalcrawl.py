@@ -58,8 +58,8 @@ class LiveJournalSpider(CrawlSpider):
             item['_id'] = self.get_username(response.url)
             item['pname'] = self.get_username(response.url)
             item['friend'] = []
-            item['friend'].append(hxs.select('//a[@class = " b-profile-username  "]/text()').extract())
-            print item['name'], item['friend']
+            item['friend'].extend(hxs.select('//a[@class = " b-profile-username  "]/text()').extract())
+            print item['pname'], item['friend']
             yield item
         else:
             url = more_url
