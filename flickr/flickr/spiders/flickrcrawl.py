@@ -3,6 +3,7 @@ from scrapy.contrib.spiders import CrawlSpider
 from scrapy.http import Request
 import pymongo
 from ..items import FlickrItem
+from bs4 import UnicodeDammit
 
 
 class FlickrSpider(CrawlSpider):
@@ -52,7 +53,7 @@ class FlickrSpider(CrawlSpider):
         self.log('Hi, this is: %s' % response.url)
         hxs = HtmlXPathSelector(response)
         sites = hxs.select('//tr/td[@class = "Who"]')
-        pname = (hxs.select('//span[@class = "nickname"]/text()').extract())[0].decode('utf-8')
+        pname = UnicodeDammit((hxs.select('//span[@class = "nickname"]/text()').extract())[0]).markup
         try:
             page = int(hxs.select('//div[@class = "Pages"]/@data-page-count').extract()[0])
         except:
