@@ -11,6 +11,7 @@ BOT_NAME = 'livejournal'
 
 SPIDER_MODULES = ['livejournal.spiders']
 NEWSPIDER_MODULE = 'livejournal.spiders'
+
 DEFAULT_ITEM_CLASS = 'livejournal.items.livejournalItem'
 # ITEM_PIPELINES = {
 # 'livejournal.pipelines.PricePipeline': 300,
@@ -21,10 +22,13 @@ ITEM_PIPELINES = [
     "livejournal.pipelines.MongoDBPipeline",
 ]
 
-# MONGODB_SERVER = '10.1.1.111'
-# MONGODB_PORT = 12345
-MONGODB_SERVER = 'localhost'
-MONGODB_PORT = 27017
+#in
+MONGODB_SERVER = '10.1.1.111'
+#out
+#MONGODB_SERVER = ''
+MONGODB_PORT = 12345
+# MONGODB_SERVER = 'localhost'
+# MONGODB_PORT = 27017
 MONGODB_DB = 'livejournal'
 MONGODB_COLLECTION = 'profiles'
 MONGODB_UNIQ_KEY = '_id'

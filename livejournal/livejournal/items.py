@@ -5,11 +5,10 @@
 
 from scrapy.item import Item, Field
 
-
-class LiveJouralItem(Item):
+class LivejournalItem(Item):
     # define the fields for your item here like:
+    # name = Field()
     _id = Field()
     pname = Field()
     url = Field()
     friend = Field()
-
