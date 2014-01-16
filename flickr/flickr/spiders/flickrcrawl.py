@@ -12,7 +12,7 @@ class FlickrSpider(CrawlSpider):
     mongo = pymongo.Connection("10.1.1.111", 12345)["flickr"]["profiles"]
     start_urls = []
 
-    method = 1
+    method = 2
     """
     crawl seed profile
     """
@@ -33,6 +33,12 @@ class FlickrSpider(CrawlSpider):
                     item_set.add(f)
         for item in item_set:
             start_urls.append('http://www.flickr.com/people/' + item + '/contacts/')
+
+    if method == 3:
+        mongo = pymongo.Connection("10.1.1.111", 12345)["flickr"]["profiles_seed"]
+        res = mongo.find()
+        for item in res:
+            start_urls.append('http://www.flickr.com/people/' + item["_id"] + '/contacts/')
 
     # # f_in = open("/Users/yutao/Documents/Data/NetworkIntegration/MultiSNS/multiple_flickr.csv","r")
 # for e in f_in:

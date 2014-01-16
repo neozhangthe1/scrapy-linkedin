@@ -26,7 +26,7 @@ MONGODB_PORT = 12345
 # MONGODB_SERVER = 'localhost'
 # MONGODB_PORT = 27017
 MONGODB_DB = 'flickr'
-MONGODB_COLLECTION = 'profiles'
+MONGODB_COLLECTION = 'profiles_seed'
 MONGODB_UNIQ_KEY = '_id'
 ###########
 
