@@ -31,15 +31,15 @@ class LiveJournalSpider(CrawlSpider):
     crawl all friends
     """
     if method == 1:
+        seed_set = set()
         item_set = set()
         res = mongo.find()
         for item in res:
+            seed_set.add(res["_id"])
             if "friend" in item:
                 for f in item["friend"]:
-                    fi = mongo.find_one({"_id":f})
-                    if fi is None:
-                        item_set.add(f)
-        for item in item_set:
+                    item_set.add(f)
+        for item in item_set - seed_set:
             start_urls.append('http://' + item + '.livejournal.com/profile')
             # start_urls.append('http://www.flickr.com/people/' + item + '/contacts/')
     print len(start_urls), "to crawl"
