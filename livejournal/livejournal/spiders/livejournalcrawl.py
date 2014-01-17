@@ -35,7 +35,7 @@ class LiveJournalSpider(CrawlSpider):
         item_set = set()
         res = mongo.find()
         for item in res:
-            seed_set.add(res["_id"])
+            seed_set.add(item["_id"])
             if "friend" in item:
                 for f in item["friend"]:
                     item_set.add(f)
