@@ -36,10 +36,13 @@ class LiveJournalSpider(CrawlSpider):
         for item in res:
             if "friend" in item:
                 for f in item["friend"]:
-                    item_set.add(f)
+                    fi = mongo.find_one({"_id":f})
+                    if fi is None:
+                        item_set.add(f)
         for item in item_set:
             start_urls.append('http://' + item + '.livejournal.com/profile')
             # start_urls.append('http://www.flickr.com/people/' + item + '/contacts/')
+    print len(start_urls), "to crawl"
 
     def parse(self, response):
         self.log('Hi, this is: %s' % response.url)
