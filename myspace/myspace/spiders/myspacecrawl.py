@@ -83,17 +83,12 @@ class MyspaceSpider(BaseSpider):
         return x[3]
 
     def parse(self, response):
-
         item = MyspaceItem()
-
         urltype = self.getType(response.url)
-
         item["_id"] = self.get_id(response.url)
-
         # hxs = self.getPage(response.url)
         hxs = HtmlXPathSelector(response)
         friends = self.getFriends(hxs)
-
 
         if urltype == "in":
             print 'in',len(friends),friends
@@ -101,6 +96,7 @@ class MyspaceSpider(BaseSpider):
         else:
             print 'out',len(friends),friends
             item['outfriends'] = friends
+        yield item
 
 
 
