@@ -21,7 +21,7 @@ class MyspaceSpider(BaseSpider):
     #     start_urls.append('https://myspace.com/'+e.strip()+'/connections/in')
     #     start_urls.append('https://myspace.com/'+e.strip()+'/connections/out')
     #
-    method = 1
+    method = 0
     """
     crawl seed profile
     """
