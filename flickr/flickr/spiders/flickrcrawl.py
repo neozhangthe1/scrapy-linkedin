@@ -13,7 +13,7 @@ class FlickrSpider(CrawlSpider):
     mongo = pymongo.Connection("10.1.1.111", 12345)["flickr"]["profiles"]
     start_urls = []
 
-    method = 2
+    method = 1
     """
     crawl seed profile
     """
