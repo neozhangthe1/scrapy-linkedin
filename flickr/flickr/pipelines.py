@@ -54,7 +54,7 @@ class MongoDBPipeline(object):
                             friends.add(f)
                         old_item["friend"] = list(friends)
                     else:
-                        old_item["friend"] = []
+                        old_item["friend"] = item["friend"]
                 else:
                     old_item = dict(item)
             self.collection.update(

@@ -19,6 +19,14 @@ def transfer():
             res = {"seed":True, "_id":row[0]}
             mongo.save(res)
 
+def clean():
+    mongo = pymongo.Connection("10.1.1.111", 12345)["flickr"]["profiles"]
+    res = mongo.find()
+    for item in res:
+        if "friend" in item:
+            item["friend_name"] = item["friend"]
+            item["friend"] = []
+            mongo.save(item)
 
 if __name__ == "__main__":
-    transfer()
+    clean()
