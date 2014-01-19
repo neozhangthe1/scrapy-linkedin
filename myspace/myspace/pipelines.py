@@ -36,10 +36,12 @@ class MongoDBPipeline(object):
                 if "outfriend" in old_item:
                     for f in old_item["outfriend"]:
                         out_edges.add(f)
-                for f in item["infriend"]:
-                    in_edges.add(f)
-                for f in item["outfriend"]:
-                    out_edges.add(f)
+                if "infriend" in item:
+                    for f in item["infriend"]:
+                        in_edges.add(f)
+                if "outfriend" in item:
+                    for f in item["outfriend"]:
+                        out_edges.add(f)
                 old_item["infriend"] = list(in_edges)
                 old_item["outfriend"] = list(out_edges)
             else:
