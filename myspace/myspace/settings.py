@@ -11,6 +11,10 @@ BOT_NAME = 'myspace'
 SPIDER_MODULES = ['myspace.spiders']
 NEWSPIDER_MODULE = 'myspace.spiders'
 
+ITEM_PIPELINES = [
+    "myspace.pipelines.MongoDBPipeline",
+]
+
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'myspace (+http://www.yourdomain.com)'
 # in

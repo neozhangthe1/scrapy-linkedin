@@ -8,6 +8,7 @@ from time import sleep
 import re
 # from selenium import webdriver
 # from ..items import PluscrawlItem
+from ..items import MyspaceItem
 
 class MyspaceSpider(BaseSpider):
 
@@ -58,8 +59,9 @@ class MyspaceSpider(BaseSpider):
         return None
 
     def getFriends(self,hxs):
-
-        friends=hxs.select('//div[@class="nameplate"]/h6/text()').extract()
+        friends = hxs.select('//div[@class="mediaSquare large"]/a/@href').extract()
+        friends = [f.strip("/") for f in friends]
+        # friends=hxs.select('//div[@class="nameplate"]/h6/text()').extract()
         return friends
 
     # def getPage(self,url):
@@ -86,7 +88,7 @@ class MyspaceSpider(BaseSpider):
 
         urltype = self.getType(response.url)
 
-        item["_id"] = self.get_id(self.url)
+        item["_id"] = self.get_id(response.url)
 
         # hxs = self.getPage(response.url)
         hxs = HtmlXPathSelector(response)

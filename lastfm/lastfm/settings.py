@@ -16,9 +16,9 @@ NEWSPIDER_MODULE = 'lastfm.spiders'
 #USER_AGENT = 'lastfm (+http://www.yourdomain.com)'
 ########### Item pipeline
 
-# ITEM_PIPELINES = [
-#     "lastfm.pipelines.MongoDBPipeline",
-# ]
+ITEM_PIPELINES = [
+    "lastfm.pipelines.MongoDBPipeline",
+]
 
 # in
 MONGODB_SERVER = '10.1.1.111'

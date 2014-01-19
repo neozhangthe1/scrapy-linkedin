@@ -1,17 +1,51 @@
 from scrapy.selector import HtmlXPathSelector
 from scrapy.contrib.spiders import CrawlSpider
 from scrapy.http import Request
-
-# from ..items import LastfmItem
-
+import pymongo
+from ..items import LastfmItem
 
 class LastfmSpider(CrawlSpider):
     name = "lastfm"
     allowed_domains = []
-    g_ = open('id_lists.dat', 'r')
+    # g_ = open('id_lists.dat', 'r')
+    # start_urls = []
+    # for e in g_:
+    #     start_urls.append('http://cn.last.fm/user/' + e.strip() + '/friends')
+    mongo = pymongo.Connection("10.1.1.111", 12345)["lastfm"]["profiles"]
     start_urls = []
-    for e in g_:
-        start_urls.append('http://cn.last.fm/user/' + e.strip() + '/friends')
+    # for e in g_:
+    #     start_urls.append('https://myspace.com/'+e.strip()+'/connections/in')
+    #     start_urls.append('https://myspace.com/'+e.strip()+'/connections/out')
+    #
+    method = 0
+    """
+    crawl seed profile
+    """
+    if method == 0:
+        res = mongo.find()
+        for item in res:
+            # start_urls.append('https://myspace.com/'+item["_id"]+'/connections/in')
+            # start_urls.append('https://myspace.com/'+item["_id"]+'/connections/out')
+            start_urls.append('http://cn.last.fm/user/' + item["_id"] + '/friends')
+            # start_urls.append('http://www.flickr.com/people/' + item["_id"] + '/contacts/')
+
+    """
+    crawl all friends
+    """
+    if method == 1:
+        seed_set = set()
+        item_set = set()
+        res = mongo.find()
+        for item in res:
+            seed_set.add(item["_id"])
+            if "friend" in item:
+                for f in item["friend"]:
+                    item_set.add(f)
+        for item in item_set - seed_set:
+            start_urls.append('http://' + item + '.livejournal.com/profile')
+            # start_urls.append('http://www.flickr.com/people/' + item + '/contacts/')
+    print len(start_urls), "to crawl"
+
 
     # rules = (Rule(SgmlLinkExtractor(allow=[r'/people/.*/contacts/\?filter=.*']),callback='parse'),)
 

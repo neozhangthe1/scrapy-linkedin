@@ -236,4 +236,4 @@ def transfer_twitter_txt():
         mongo.save(item)
 
 if __name__ == "__main__":
-    transfer_facebook()
+    transfer_myspace()
