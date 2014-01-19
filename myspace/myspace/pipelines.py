@@ -31,10 +31,10 @@ class MongoDBPipeline(object):
             #crawl infriends first,if _id exists, add outfriends to the item
             if old_item is not None:
                 if "infriend" in old_item:
-                    for f in old_item["in"]:
+                    for f in old_item["infriend"]:
                         in_edges.add(f)
                 if "outfriend" in old_item:
-                    for f in old_item["out"]:
+                    for f in old_item["outfriend"]:
                         out_edges.add(f)
                 for f in item["infriend"]:
                     in_edges.add(f)
