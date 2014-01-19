@@ -8,6 +8,6 @@ from scrapy.item import Item, Field
 class MyspaceItem(Item):
     # define the fields for your item here like:
     _id = Field()
-    infriends = Field()
-    outfriends = Field()
+    infriend = Field()
+    outfriend = Field()
 
