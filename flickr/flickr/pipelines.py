@@ -4,6 +4,7 @@
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 from scrapy.conf import settings
 from scrapy import log
+from items import FlickrProfileItem
 
 
 class FlickrPipeline(object):
@@ -38,18 +39,24 @@ class MongoDBPipeline(object):
         if self.__get_uniq_key() is None:
             self.collection.insert(dict(item))
         else:
-            print "Append friend for", item["_id"]
             old_item = self.collection.find_one({"_id": item["_id"]})
-            if old_item is not None:
-                if "friend" in old_item:
-                    friends = set(old_item["friend"])
-                    for f in item["friend"]:
-                        friends.add(f)
-                    old_item["friend"] = list(friends)
-                else:
-                    old_item["friend"] = []
+            if type(item) is FlickrProfileItem:
+                print "Append profile for", item["_id"]
+                for k in item:
+                    old_item[k] = item[k]
+                old_item["profile"] = True
             else:
-                old_item = dict(item)
+                print "Append friend for", item["_id"]
+                if old_item is not None:
+                    if "friend" in old_item:
+                        friends = set(old_item["friend"])
+                        for f in item["friend"]:
+                            friends.add(f)
+                        old_item["friend"] = list(friends)
+                    else:
+                        old_item["friend"] = []
+                else:
+                    old_item = dict(item)
             self.collection.update(
                 {self.__get_uniq_key(): item[self.__get_uniq_key()]},
                 old_item,

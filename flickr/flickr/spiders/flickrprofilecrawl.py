@@ -1,13 +1,13 @@
-from scrapy.selector import HtmlXPathSelector
+from scrapy.selector import Selector
 from scrapy.contrib.spiders import CrawlSpider
 from scrapy.http import Request
 import pymongo
-from ..items import FlickrItem
+from ..items import FlickrProfileItem
 from bs4 import UnicodeDammit
 
 
-class FlickrSpider(CrawlSpider):
-    name = "flickr"
+class FlickrprofileSpider(CrawlSpider):
+    name = "flickrprofile"
     allowed_domains = []
     # g_ = open('id_lists.dat', 'r')
     mongo = pymongo.Connection("10.1.1.111", 12345)["flickr"]["profiles"]
@@ -20,6 +20,9 @@ class FlickrSpider(CrawlSpider):
     if method == 0:
         res = mongo.find()
         for item in res:
+            if "profile" in item:
+                if item["profile"]:
+                    continue
             start_urls.append('http://www.flickr.com/people/' + item["_id"] + '/')
 
     """
@@ -51,33 +54,82 @@ class FlickrSpider(CrawlSpider):
 
     def parse(self, response):
         self.log('Hi, this is: %s' % response.url)
-        hxs = HtmlXPathSelector(response)
-        given = UnicodeDammit(hxs.select('//span[@class = "given-name"]/text()').extract()[0]).markup
-        family = UnicodeDammit(hxs.select('//span[@class = "family-name"]/text()').extract()[0]).markup
+        hxs = Selector(response)
+        dls = hxs.xpath('//div[@id = "a-bit-more-about"]/dl')
 
-        profile = UnicodeDammit(hxs.select('//span[@class = "profile-section"]')
-        sites = hxs.select('//tr/td[@class = "Who"]')
-        pname = UnicodeDammit((hxs.select('//span[@class = "nickname"]/text()').extract())[0]).markup
+        item = FlickrProfileItem()
+        # item['_id'] = self.get_username(response.url)
+        _id = self.get_username(response.url)
+        print _id
 
-        try:
-            page = int(hxs.select('//div[@class = "Pages"]/@data-page-count').extract()[0])
-        except:
-            page = 1
+        item["_id"] = _id
+        for dl in dls:
+            if dl.xpath('dt/text()').extract()[0] == "Name:":
+                given_name = ""
+                family_name = ""
 
-        item = FlickrItem()
-        item['_id'] = self.get_username(response.url)
-        item['pname'] = item["_id"]
-        item['friend'] = []
-        for site in sites:
-            item['friend'].append(site.select('h2/text()').extract()[0])
-            print site.select('h2/text()').extract()
+                try:
+                    given_name = dl.xpath('dd/span[@class="given-name"]/text()').extract()[0]
+                except:
+                    pass
+                else:
+                    print 'given_name:',given_name
+                    # item['given_name'] = given_name
+
+                try:
+                    family_name = dl.xpath('dd/span[@class = "family-name"]/text()').extract()[0]
+                except:
+                    pass
+                else:
+                    print 'family_name:',family_name
+                    # item['family_name'] = family_name
+                item["name"] = given_name+" "+family_name
+
+            if dl.xpath('dt/text()').extract()[0] == "Joined:":
+                joined = dl.xpath('dd/text()').extract()[0]
+                print 'joined time:', joined
+                item['joined'] = joined
+
+            if dl.xpath('dt/text()').extract()[0] == "Hometown:":
+                home = dl.xpath('dd/text()').extract()[0]
+                print 'hometown:',home
+                item['hometown'] = home
+
+            if dl.xpath('dt/text()').extract()[0] == "Currently:":
+                try:
+                    locality = dl.xpath('dd/span[@class = "adr"]/span[@class = "locality"]/text()').extract()[0]
+                except:
+                    pass
+                else:
+                    print 'locality:',locality
+                    item['location'] = locality
+
+                try:
+                    country_name = dl.xpath('dd/span[@class = "adr"]/span[@class = "country-name"]/text()').extract()[0]
+                except:
+                    pass
+                else:
+                    print 'country-name:',country_name
+                    item['country'] = country_name
+
+            if dl.xpath('dt/text()').extract()[0] == "I am:":
+                gender = dl.xpath('dd/text()').extract()[0].strip()
+                print 'gender:', gender
+                item['gender'] = gender
+
+            if dl.xpath('dt/text()').extract()[0] == "Occupation:":
+                occupation = dl.xpath('dd/text()').extract()[0]
+                print 'occupation:',occupation
+                item['occupation'] = occupation
+
+            if dl.xpath('dt/text()').extract()[0] == "Website:":
+                websitename = dl.xpath('dd/a/text()').extract()[0]
+                websiteurl = dl.xpath('dd/a/@href').extract()[0]
+                print 'website:',websitename,websiteurl
+                item['websitename'] = websitename
+                item['websiteurl'] = websiteurl
         yield item
 
-        for p in range(1, page):
-            if p == 1:
-                p += 1
-            url = 'http://www.flickr.com/people/' + pname + '/contacts/?filter&page=' + str(p)
-            yield Request(url, callback=self.parse)
 
     def get_username(self, url):
         find_index = url.find("flickr.com/people/")
