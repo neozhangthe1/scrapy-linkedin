@@ -97,10 +97,10 @@ class MyspaceSpider(BaseSpider):
 
         if urltype == "in":
             print 'in',len(friends),friends
-            item['infriends'] = friends
+            item['in'] = friends
         else:
             print 'out',len(friends),friends
-            item['outfriends'] = friends
+            item['out'] = friends
 
 
 

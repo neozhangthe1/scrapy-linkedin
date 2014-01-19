@@ -26,11 +26,22 @@ class MongoDBPipeline(object):
         else:
             print "Append friend for", item["_id"]
             old_item = self.collection.find_one({"_id": item["_id"]})
-
+            in_edges = set()
+            out_edges = set()
             #crawl infriends first,if _id exists, add outfriends to the item
             if old_item is not None:
-                if item["outfriends"] == []:
-                    old_item["outfriends"] = item["outfriends"]
+                if "in" in old_item:
+                    for f in old_item["in"]:
+                        in_edges.add(f)
+                if "out" in old_item:
+                    for f in old_item["out"]:
+                        out_edges.add(f)
+                for f in item["infriend"]:
+                    in_edges.add(f)
+                for f in item["outfriend"]:
+                    out_edges.add(f)
+                old_item["in"] = list(in_edges)
+                old_item["out"] = list(out_edges)
             else:
                 old_item = dict(item)
             self.collection.update(
