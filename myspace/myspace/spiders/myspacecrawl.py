@@ -22,7 +22,7 @@ class MyspaceSpider(BaseSpider):
     #     start_urls.append('https://myspace.com/'+e.strip()+'/connections/in')
     #     start_urls.append('https://myspace.com/'+e.strip()+'/connections/out')
     #
-    method = 0
+    method = 1
     """
     crawl seed profile
     """
@@ -42,11 +42,16 @@ class MyspaceSpider(BaseSpider):
         res = mongo.find()
         for item in res:
             seed_set.add(item["_id"])
-            if "friend" in item:
-                for f in item["friend"]:
+            if "infriend" in item:
+                for f in item["infriend"]:
+                    item_set.add(f)
+            if "outfriend" in item:
+                for f in item["outfriend"]:
                     item_set.add(f)
         for item in item_set - seed_set:
-            start_urls.append('http://' + item + '.livejournal.com/profile')
+            start_urls.append('https://myspace.com/'+item+'/connections/in')
+            start_urls.append('https://myspace.com/'+item+'/connections/out')
+            # start_urls.append('http://' + item + '.livejournal.com/profile')
             # start_urls.append('http://www.flickr.com/people/' + item + '/contacts/')
     print len(start_urls), "to crawl"
 

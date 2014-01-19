@@ -17,7 +17,7 @@ class LastfmSpider(CrawlSpider):
     #     start_urls.append('https://myspace.com/'+e.strip()+'/connections/in')
     #     start_urls.append('https://myspace.com/'+e.strip()+'/connections/out')
     #
-    method = 0
+    method = 1
     """
     crawl seed profile
     """
@@ -42,7 +42,8 @@ class LastfmSpider(CrawlSpider):
                 for f in item["friend"]:
                     item_set.add(f)
         for item in item_set - seed_set:
-            start_urls.append('http://' + item + '.livejournal.com/profile')
+            start_urls.append('http://cn.last.fm/user/' + item + '/friends')
+            # start_urls.append('http://' + item + '.livejournal.com/profile')
             # start_urls.append('http://www.flickr.com/people/' + item + '/contacts/')
     print len(start_urls), "to crawl"
 
