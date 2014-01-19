@@ -14,7 +14,7 @@ class MyspaceSpider(BaseSpider):
     name = 'myspace'
 
     #you can extent the list from multions_myspace
-    g_ = open('id_lists.dat', 'r')
+    # g_ = open('id_lists.dat', 'r')
     mongo = pymongo.Connection("10.1.1.111", 12345)["myspace"]["profiles"]
     start_urls = []
     # for e in g_:
