@@ -66,7 +66,7 @@ class FlickrSpider(CrawlSpider):
 
         item = FlickrItem()
         item['_id'] = self.get_username(response.url)
-        item['pname'] = item["_id"]
+        item['pname'] = pname#item["_id"]
         item['friend'] = []
         for site in sites:
             f = site.select('p/a[@rel="contact"]/@href').extract()[0].replace("photos","").replace("/","")
@@ -77,7 +77,7 @@ class FlickrSpider(CrawlSpider):
         for p in range(1, page):
             if p == 1:
                 p += 1
-            url = 'http://www.flickr.com/people/' + item["pname"] + '/contacts/?filter&page=' + str(p)
+            url = 'http://www.flickr.com/people/' + item['_id'] + '/contacts/?filter&page=' + str(p)
             yield Request(url, callback=self.parse)
 
     def get_username(self, url):
