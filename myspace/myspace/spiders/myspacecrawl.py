@@ -63,7 +63,7 @@ class MyspaceSpider(BaseSpider):
             return x[1]
         return None
 
-    def getFriends(self,hxs):
+    def getFriends(self, hxs):
         friends = hxs.select('//div[@class="mediaSquare large"]/a/@href').extract()
         friends = [f.strip("/") for f in friends]
         # friends=hxs.select('//div[@class="nameplate"]/h6/text()').extract()
