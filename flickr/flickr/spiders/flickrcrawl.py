@@ -28,12 +28,15 @@ class FlickrSpider(CrawlSpider):
     """
     if method == 1:
         item_set = set()
+        seed_set = set()
         res = mongo.find()
         for item in res:
+            seed_set.add(item["_id"])
             if "friend" in item:
                 for f in item["friend"]:
                     item_set.add(f)
-        for item in item_set:
+        crawl_set = item_set - seed_set
+        for item in crawl_set:
             start_urls.append('http://www.flickr.com/people/' + item + '/contacts/')
 
     if method == 2:
