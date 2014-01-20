@@ -75,7 +75,7 @@ class LastfmSpider(CrawlSpider):
         name = self.get_username(response.url)
         print self.get_username(response.url)
         for site in sites:
-            item['friend'].append(site)
+            item['friend'].append(site.strip())
             print site
         yield item
 

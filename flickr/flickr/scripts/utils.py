@@ -28,5 +28,14 @@ def clean():
             item["friend"] = []
             mongo.save(item)
 
+def clean_lastfm():
+    mongo = pymongo.Connection("10.1.1.111", 12345)["lastfm"]["profiles"]
+    res = mongo.find()
+    for item in res:
+        if "friend" in item:
+            friends = [f.strip() for f in item["friend"]]
+            item["friend"] = friends
+            mongo.save(item)
+
 if __name__ == "__main__":
-    clean()
+    clean_lastfm()
