@@ -77,7 +77,7 @@ class FlickrSpider(CrawlSpider):
         for p in range(1, page):
             if p == 1:
                 p += 1
-            url = 'http://www.flickr.com/people/' + pname + '/contacts/?filter&page=' + str(p)
+            url = 'http://www.flickr.com/people/' + item["pname"] + '/contacts/?filter&page=' + str(p)
             yield Request(url, callback=self.parse)
 
     def get_username(self, url):
