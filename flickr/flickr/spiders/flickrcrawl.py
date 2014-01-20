@@ -13,7 +13,7 @@ class FlickrSpider(CrawlSpider):
     mongo = pymongo.Connection("10.1.1.111", 12345)["flickr"]["profiles"]
     start_urls = []
 
-    method = 1
+    method = 0
     """
     crawl seed profile
     """
@@ -21,7 +21,7 @@ class FlickrSpider(CrawlSpider):
         res = mongo.find()
         for item in res:
             start_urls.append('http://www.flickr.com/people/' + item["_id"] + '/contacts/')
-    start_urls = start_urls[1000:]
+    # start_urls = start_urls
 
     """
     crawl all friends
